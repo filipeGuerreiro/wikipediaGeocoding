@@ -2,11 +2,14 @@
 Created on Oct 14, 2015
 
 @author: Filipe
+
 '''
 from bs4 import BeautifulSoup
 import urllib2
 
-from geopy.geocoders import Nominatim
+#from geopy.geocoders import Nominatim
+from geopy.geocoders import GeoNames
+
 
 def getHyperlinkText(html_page):
     
@@ -24,8 +27,9 @@ def getHyperlinkText(html_page):
             res.append(linkText)
             
     
-    print ', '.join(res)
+    #print ', '.join(res)
     return res
+
 
 def soupFunction(tag):
     if tag.name == 'a':
@@ -33,8 +37,15 @@ def soupFunction(tag):
             if tag.parent.parent['class'][0] == 'mw-content-ltr':
                 return True
     return False
+
+
+def geocode(hyperlinkList):
+    geolocator = GeoNames(country_bias='UK', username='filipeguerreiro')
+    for query in hyperlinkList:
+        location = geolocator.geocode(query)
+        if location != None:
+            print query, ':', location.latitude, ',', location.longitude
          
-        
 
 if __name__ == '__main__':
     
@@ -43,11 +54,7 @@ if __name__ == '__main__':
     
     hyperlinkList = getHyperlinkText(html_page)
     
-    '''geolocator = Nominatim()
-    for query in hyperlinkList:
-        location = geolocator.geocode(query)
-        if location != None:
-            print query,':',location.latitude,',',location.longitude'''
+    geocode(hyperlinkList)
     
     
     

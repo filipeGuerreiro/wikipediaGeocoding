@@ -1,4 +1,8 @@
 # wikipediaGeocoding
+## Required libraries:
+- Beautifulsoup4
+- geopy
+
 Given a link to a Wikipedia page, this extracts a list of the names for geographical
 locations that you can identify in that page. These names can be any type of geographical
 location (e.g. countries, cities, points of interest, etc.). This search is limited to

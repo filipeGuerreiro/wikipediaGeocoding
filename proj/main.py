@@ -3,21 +3,24 @@ Created on Oct 14, 2015
 
 @author: Filipe
 '''
-from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
 import urllib2
+
+from geopy.geocoders import Nominatim
 
 def getHyperlinkText(html_page):
     
-    data = html_page.read()
+    html_doc = html_page.read()
     
-    soup = BeautifulSoup(data)
+    soup = BeautifulSoup(html_doc, 'html.parser')
+    #print soup.find('div', id='bodyContent').p
     
     res = []
-    for link in soup.findAll('a'):
+    for link in soup.find_all('a'):
         
         if link.get('title') != None:
-            #print link.get('title')
-            res.append(link.get('title'))
+            #print link.get('title').encode('utf8')
+            res.append(link.get('title').encode('utf8'))
     
     #print ', '.join(res)
     return res
@@ -30,6 +33,11 @@ if __name__ == '__main__':
     
     hyperlinkList = getHyperlinkText(html_page)
     
+    geolocator = Nominatim()
+    for query in hyperlinkList:
+        location = geolocator.geocode(query)
+        if location != None:
+            print query,':',location.latitude,',',location.longitude
     
     
     

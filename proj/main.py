@@ -6,9 +6,13 @@ Created on Oct 14, 2015
 '''
 from bs4 import BeautifulSoup
 import urllib2
+import json
 
 #from geopy.geocoders import Nominatim
 from geopy.geocoders import GeoNames
+
+WIKIGEO_API = ("https://en.wikipedia.org/w/api.php?"
+               "action=query&prop=coordinates&format=json&titles=")
 
 
 def getHyperlinkText(html_page):
@@ -44,8 +48,20 @@ def geocode(hyperlinkList):
     for query in hyperlinkList:
         location = geolocator.geocode(query)
         if location != None:
-            print query, ':', location.latitude, ',', location.longitude
+            print query, ':', location.latitude, location.longitude
          
+
+def extractCoordinates(link):
+    urlFriendlyString = link.replace(' ', '%20')
+    wikiapiResponse = urllib2.urlopen(WIKIGEO_API+urlFriendlyString)
+    jsonResponse = json.load(wikiapiResponse)
+    try:
+        lat = jsonResponse['query']['pages'].values()[0]['coordinates'][0]['lat']
+        lon = jsonResponse['query']['pages'].values()[0]['coordinates'][0]['lon']
+        return [lat, lon]
+    except KeyError:
+        return None, None
+
 
 if __name__ == '__main__':
     
@@ -54,7 +70,11 @@ if __name__ == '__main__':
     
     hyperlinkList = getHyperlinkText(html_page)
     
-    geocode(hyperlinkList)
+    #geocode(hyperlinkList)
+    for link in hyperlinkList:
+        lat, lon = extractCoordinates(link)
+        if lat != None:
+            print link, lat, lon
     
     
     

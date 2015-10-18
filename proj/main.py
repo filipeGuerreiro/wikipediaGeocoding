@@ -7,6 +7,7 @@ Created on Oct 14, 2015
 from bs4 import BeautifulSoup
 import urllib2
 import json
+import codecs
 
 #from geopy.geocoders import Nominatim
 from geopy.geocoders import GeoNames
@@ -24,15 +25,12 @@ def getHyperlinkText(html_page):
     html_doc = html_page.read()
     
     soup = BeautifulSoup(html_doc, 'html.parser')
-    #print soup.find('mw-content-text')
     
     res = dict()
     for link in soup.find_all(soupFunction):
         
         if link.get('title') != None:
-            #print link.get('title').encode('utf8')
             linkText = link.get('title').encode('utf8')
-            #res.append(linkText)
             res[linkText] = link
             
     #print ', '.join(res)
@@ -74,7 +72,6 @@ def extractCoordinates(link):
         lon = jsonResponse['query']['pages'].values()[0]['coordinates'][0]['lon']
         return [lat, lon]
     except KeyError:
-        #del hyperlinkDict[link]
         return None, None
     
 
@@ -94,8 +91,6 @@ if __name__ == '__main__':
     html_page = urllib2.urlopen(pageName)    
     hyperlinkDict, soup = getHyperlinkText(html_page)
     
-    #geocode(hyperlinkList)
-    #geoLocations = []
     for link, tag in hyperlinkDict.iteritems():
         lat, lon = extractCoordinates(link)
         if lat != None:
@@ -105,5 +100,5 @@ if __name__ == '__main__':
             appendImageToLink(tag, image)
     
     appendPopupStyleHeader(soup)
-    #fout = open('C:\\Users\\Filipe\\Desktop\\PRI\\fout.html', 'w')
-    #pprint(soup, fout)
+    #fout = codecs.open('C:\\Users\\Filipe\\Desktop\\PRI\\fout.html', 'w', 'utf-8')
+    #fout.write(soup.prettify())

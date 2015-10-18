@@ -52,7 +52,7 @@ def appendPopupStyleHeader(soup):
 
 
 def appendImageToLink(link, image):
-    link.append(' '+image)
+    link.append('<img class=\"popup\" src=\"'+image+"\"/>")
 
 
 def geocode(hyperlinkList):
@@ -100,5 +100,5 @@ if __name__ == '__main__':
             appendImageToLink(tag, image)
     
     appendPopupStyleHeader(soup)
-    #fout = codecs.open('C:\\Users\\Filipe\\Desktop\\PRI\\fout.html', 'w', 'utf-8')
-    #fout.write(soup.prettify())
+    fout = codecs.open('C:\\Users\\Filipe\\Desktop\\PRI\\fout.html', 'w', 'utf-8')
+    fout.write(soup.prettify())

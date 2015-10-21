@@ -5,10 +5,10 @@ Created on Oct 14, 2015
 
 '''
 from bs4 import BeautifulSoup
-import urllib2
+import urllib3
 import json
 import codecs
-#import certifi
+import certifi
 
 #from geopy.geocoders import Nominatim
 from geopy.geocoders import GeoNames
@@ -19,28 +19,6 @@ WIKIGEO_API = ("https://en.wikipedia.org/w/api.php?"
 
 EUROPEANA_API = ("http://europeana.eu/api/v2/search.json?"
                  "wskey=3STkxBhE8&rows=1&qf=TYPE:IMAGE&query=")
-
-
-def main():
-    #pageName = "https://en.wikipedia.org/wiki/Russell_Hoban"  
-    
-    print 'Insira o link'
-    pageName = raw_input('---> ')
-    
-    html_page = urllib2.urlopen(pageName)    
-    hyperlinkDict, soup = getHyperlinkText(html_page)
-    
-    for link, tag in hyperlinkDict.iteritems():
-        lat, lon = extractCoordinates(link)
-        if lat != None:
-            print link, lat, lon
-            #geoLocations.append(link)
-            image = extractImageEuropeana(link)
-            appendImageToLink(tag, image)
-    
-    appendPopupStyleHeader(soup)
-    fout = codecs.open('C:\\Users\\Filipe\\Desktop\\PRI\\fout.html', 'w', 'utf-8')
-    fout.write(soup.prettify())
 
 
 def getHyperlinkText(html_page):
@@ -67,7 +45,7 @@ def soupFunction(tag):
                 if tag.parent.parent['class'][0] == 'mw-content-ltr':
                     return True
             except:
-                return False
+                    return False
     return False
 
 
@@ -91,9 +69,9 @@ def geocode(hyperlinkList):
 
 def extractCoordinates(link):
     urlFriendlyString = link.replace(' ', '%20')
-    #http = urllib3.PoolManager(cert_reqs='CERT_REQUIRED', ca_certs=certifi.where())
-    #wikipediaResponse = http.request('GET', WIKIGEO_API+urlFriendlyString)
-    wikipediaResponse = urllib2.urlopen(WIKIGEO_API+urlFriendlyString)
+    http = urllib3.PoolManager(cert_reqs='CERT_REQUIRED', ca_certs=certifi.where())
+    wikipediaResponse = http.request('GET', WIKIGEO_API+urlFriendlyString)
+    #wikipediaResponse = urllib2.urlopen(WIKIGEO_API+urlFriendlyString)
     try:
         jsonResponse = json.load(wikipediaResponse)
         lat = jsonResponse['query']['pages'].values()[0]['coordinates'][0]['lat']
@@ -115,4 +93,23 @@ def extractImageEuropeana(link):
 
 if __name__ == '__main__':
     
-    main()
+    
+    print 'Insira o link'
+    pageName = raw_input('---> ')
+    #pageName = "https://en.wikipedia.org/wiki/Riddley_Walker"
+    http = urllib3.PoolManager(cert_reqs='CERT_REQUIRED', ca_certs=certifi.where())
+    html_page = http.request('GET', pageName)
+    #html_page = urllib2.urlopen(pageName)
+    hyperlinkDict, soup = getHyperlinkText(html_page)
+    
+    for link, tag in hyperlinkDict.iteritems():
+        lat, lon = extractCoordinates(link)
+        if lat != None:
+            print link, lat, lon
+            #geoLocations.append(link)
+            #image = extractImageEuropeana(link)
+            #appendImageToLink(tag, image)
+    
+#    appendPopupStyleHeader(soup)
+#    fout = codecs.open('C:\\Users\\Filipe\\Desktop\\PRI\\fout.html', 'w', 'utf-8')
+#    fout.write(soup.prettify())

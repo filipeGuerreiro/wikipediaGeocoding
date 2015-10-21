@@ -5,7 +5,7 @@ Created on Oct 14, 2015
 
 '''
 from bs4 import BeautifulSoup
-import urllib3
+import urllib2
 import json
 import codecs
 import certifi
@@ -69,9 +69,9 @@ def geocode(hyperlinkList):
 
 def extractCoordinates(link):
     urlFriendlyString = link.replace(' ', '%20')
-    http = urllib3.PoolManager(cert_reqs='CERT_REQUIRED', ca_certs=certifi.where())
-    wikipediaResponse = http.request('GET', WIKIGEO_API+urlFriendlyString)
-    #wikipediaResponse = urllib2.urlopen(WIKIGEO_API+urlFriendlyString)
+    #http = urllib3.PoolManager(cert_reqs='CERT_REQUIRED', ca_certs=certifi.where())
+    #wikipediaResponse = http.request('GET', WIKIGEO_API+urlFriendlyString)
+    wikipediaResponse = urllib2.urlopen(WIKIGEO_API+urlFriendlyString)
     try:
         jsonResponse = json.load(wikipediaResponse)
         lat = jsonResponse['query']['pages'].values()[0]['coordinates'][0]['lat']
@@ -97,9 +97,9 @@ if __name__ == '__main__':
     print 'Insira o link'
     pageName = raw_input('---> ')
     #pageName = "https://en.wikipedia.org/wiki/Riddley_Walker"
-    http = urllib3.PoolManager(cert_reqs='CERT_REQUIRED', ca_certs=certifi.where())
-    html_page = http.request('GET', pageName)
-    #html_page = urllib2.urlopen(pageName)
+    #http = urllib3.PoolManager(cert_reqs='CERT_REQUIRED', ca_certs=certifi.where())
+    #html_page = http.request('GET', pageName)
+    html_page = urllib2.urlopen(pageName)
     hyperlinkDict, soup = getHyperlinkText(html_page)
     
     for link, tag in hyperlinkDict.iteritems():

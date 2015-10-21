@@ -41,8 +41,11 @@ def getHyperlinkText(html_page):
 def soupFunction(tag):
     if tag.name == 'a':
         if tag.parent.name == 'p':
-            if tag.parent.parent['class'][0] == 'mw-content-ltr':
-                return True
+            try:
+                if tag.parent.parent['class'][0] == 'mw-content-ltr':
+                    return True
+            except:
+                    return False
     return False
 
 
@@ -90,7 +93,10 @@ def extractImageEuropeana(link):
 
 if __name__ == '__main__':
     
-    pageName = "https://en.wikipedia.org/wiki/Riddley_Walker"
+    
+    print 'Insira o link'
+    pageName = raw_input('---> ')
+    #pageName = "https://en.wikipedia.org/wiki/Riddley_Walker"
     http = urllib3.PoolManager(cert_reqs='CERT_REQUIRED', ca_certs=certifi.where())
     html_page = http.request('GET', pageName)
     #html_page = urllib2.urlopen(pageName)

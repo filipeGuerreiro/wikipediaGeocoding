@@ -20,6 +20,24 @@ EUROPEANA_API = ("http://europeana.eu/api/v2/search.json?"
                  "wskey=3STkxBhE8&rows=1&qf=TYPE:IMAGE&query=")
 
 
+def main():
+    pageName = "https://en.wikipedia.org/wiki/Russell_Hoban"  
+    html_page = urllib2.urlopen(pageName)    
+    hyperlinkDict, soup = getHyperlinkText(html_page)
+    
+    for link, tag in hyperlinkDict.iteritems():
+        lat, lon = extractCoordinates(link)
+        if lat != None:
+            print link, lat, lon
+            #geoLocations.append(link)
+            image = extractImageEuropeana(link)
+            appendImageToLink(tag, image)
+    
+    appendPopupStyleHeader(soup)
+    fout = codecs.open('C:\\Users\\Filipe\\Desktop\\PRI\\fout.html', 'w', 'utf-8')
+    fout.write(soup.prettify())
+
+
 def getHyperlinkText(html_page):
     
     html_doc = html_page.read()
@@ -40,8 +58,11 @@ def getHyperlinkText(html_page):
 def soupFunction(tag):
     if tag.name == 'a':
         if tag.parent.name == 'p':
-            if tag.parent.parent['class'][0] == 'mw-content-ltr':
-                return True
+            try:
+                if tag.parent.parent['class'][0] == 'mw-content-ltr':
+                    return True
+            except:
+                return False
     return False
 
 
@@ -87,18 +108,4 @@ def extractImageEuropeana(link):
 
 if __name__ == '__main__':
     
-    pageName = "https://en.wikipedia.org/wiki/Riddley_Walker"  
-    html_page = urllib2.urlopen(pageName)    
-    hyperlinkDict, soup = getHyperlinkText(html_page)
-    
-    for link, tag in hyperlinkDict.iteritems():
-        lat, lon = extractCoordinates(link)
-        if lat != None:
-            print link, lat, lon
-            #geoLocations.append(link)
-            image = extractImageEuropeana(link)
-            appendImageToLink(tag, image)
-    
-    appendPopupStyleHeader(soup)
-    fout = codecs.open('C:\\Users\\Filipe\\Desktop\\PRI\\fout.html', 'w', 'utf-8')
-    fout.write(soup.prettify())
+    main()

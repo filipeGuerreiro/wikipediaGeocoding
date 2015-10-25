@@ -24,7 +24,3 @@ def extractCoordinates(link):
         return [lat, lon]
     except:
         return None, None
-
-
-if __name__ == '__main__':
-    pass

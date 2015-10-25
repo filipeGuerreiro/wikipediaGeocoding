@@ -36,7 +36,3 @@ def soupFunction(tag):
             except:
                 return False
     return False
-
-
-if __name__ == '__main__':
-    pass

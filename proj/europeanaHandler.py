@@ -30,7 +30,3 @@ def appendPopupStyleHeader(soup):
 def appendImageToLink(link, image):
     link.append('<img class=\"popup\" src=\"'+image+"\"/>")
     
-
-
-if __name__ == '__main__':
-    pass

@@ -7,9 +7,11 @@ Created on Oct 14, 2015
 
 import urllib2
 import codecs
+import HTMLParser
+import os
 
-from geopy.geocoders import GeoNames
-from pprint import pprint
+#from geopy.geocoders import GeoNames
+#from pprint import pprint
 from soupHandler import getHyperlinks
 from europeanaHandler import appendImageToLink, extractImageEuropeana,\
     appendPopupStyleHeader
@@ -29,13 +31,16 @@ def main():
         lat, lon = extractCoordinates(link)
         if lat != None:
             print link, lat, lon
-            #geoLocations.append(link)
-            #image = extractImageEuropeana(link)
-            #appendImageToLink(tag, image)
     
-    #appendPopupStyleHeader(soup)
-    #fout = codecs.open('C:\\Users\\Filipe\\Desktop\\PRI\\fout.html', 'w', 'utf-8')
-    #fout.write(soup.prettify())
+            image = extractImageEuropeana(link)
+            appendImageToLink(tag, image)
+    
+    appendPopupStyleHeader(soup)
+    
+    fileName = os.path.dirname(os.path.abspath(__file__)) + 'output.html'
+    fout = codecs.open(fileName, 'w', 'utf-8')
+    htmlParser = HTMLParser.HTMLParser()
+    fout.write(htmlParser.unescape(soup.prettify()))
 
 
 '''def geocode(hyperlinkList):

@@ -33,6 +33,7 @@ def main():
             print link, lat, lon
     
             image = extractImageEuropeana(link)
+            changeImageDirectory(soup)
             appendImageToLink(tag, image)
     
     appendPopupStyleHeader(soup)

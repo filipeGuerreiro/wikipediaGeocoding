@@ -14,7 +14,7 @@ import os
 #from pprint import pprint
 from soupHandler import getHyperlinks
 from europeanaHandler import appendImageToLink, extractImageEuropeana,\
-    appendPopupStyleHeader
+    appendPopupStyleHeader, changeImageDirectory
 from wikipediaHandler import extractCoordinates
 
 

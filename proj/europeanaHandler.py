@@ -25,14 +25,14 @@ def changeImageDirectory(soup):
     i = []
     images = soup.findAll('link')
     for j in images:
-        if not re.search('//', str(headerlink['href'])):
-            headerlink['href'] = "https://wikipedia.org" + headerlink['href']
+        if not re.search('//', str(j['href'])):
+            j['href'] = "https://en.wikipedia.org" + j['href']
         else:
-            i.append(headerlink)
+            i.append(j)
     for div in soup.findAll('div'):
         for link in div.findAll('a', href=True):
             if not re.search('//|#', str(link['href'])):
-                link['href'] = "https://wikipedia.org" + link['href']
+                link['href'] = "https://en.wikipedia.org" + link['href']
             else:
                 i.append(link)
 

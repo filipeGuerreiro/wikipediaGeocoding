@@ -32,7 +32,7 @@ def main():
         if lat != None:
             print link, lat, lon
     
-            image = extractImageEuropeana(link)
+            image = extractImageEuropeana(link, lat, lon)
             changeImageDirectory(soup)
             appendImageToLink(tag, image)
     

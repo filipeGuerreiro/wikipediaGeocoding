@@ -10,11 +10,15 @@ import re
 EUROPEANA_API = ("http://europeana.eu/api/v2/search.json?"
                  "wskey=3STkxBhE8&rows=1&qf=TYPE:IMAGE&query=")
 
+LATITUDE = "pl_wgs84_pos_lat:"
 
+LONGITUDE = "pl_wgs84_pos_long:"
 
-def extractImageEuropeana(link):
+def extractImageEuropeana(link, lat, lon):
     urlFriendlyString = link.replace(' ', '%20')
-    europeanaResponse = urllib2.urlopen(EUROPEANA_API+urlFriendlyString)
+    stringlat = repr(lat)
+    stringlon = repr (lon)
+    europeanaResponse = urllib2.urlopen(EUROPEANA_API+urlFriendlyString+"&qf="+LATITUDE+"["+stringlat+"+TO+*]"+"&qf="+LONGITUDE+"["+stringlon+"+TO+*]")
     jsonResponse = json.load(europeanaResponse)
     try:
         return jsonResponse['items'][0]['edmPreview'][0]
